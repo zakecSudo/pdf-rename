@@ -1,26 +1,34 @@
 @echo off
 
-REM TULE PREIMENUJ V ŽELJENI EXCEL VIR
-set source_excel_file=demo.xlsx
-REM TULE PREIMENUJ V ŽELJENI EXCEL VIR
+:: TULE PREIMENUJ V ŽELJENI EXCEL VIR
+set "source_excel_file=demo.xlsx"
+:: TULE PREIMENUJ V ŽELJENI EXCEL VIR
 
-echo "KOPIRAJ in PREIMENUJ .xlsx datoteko iz .pdf"
+echo ----------------------------------------------------------------
+echo KOPIRAJ in PREIMENUJ %source_excel_file% datoteko iz .pdf datotek
+echo ----------------------------------------------------------------
 set /p "choice=Ali naj se skripta požene v trenutnem direktoriju? (y/n): "
 
-if "%choice%"=="n" (
+if /i "%choice%"=="n" (
     set /p "folder=Vnesi pot kjer naj se skripta požene: "
     cd "%folder%"
 )
 
-REM Najdi vse pdf file
-for /R %%I in (*.pdf) do (
-    set "pdf_file=%%~fI"
-    set "excel_file=%%~dpnI.xlsx"
+:: Kopiraj demo.xlsx za vsak .pdf file
+set "new_files=0"
+for /r %%F in (*.pdf) do (
+    set "pdf_file=%%F"
+    setlocal enabledelayedexpansion
+    set "excel_file=!pdf_file:.pdf=.xlsx!"
 
-    REM Preveri če tak file ne obstaja
+    :: Preveri če tak file ne obstaja
     if not exist "!excel_file!" (
         copy "%source_excel_file%" "!excel_file!"
+        set /a "new_files+=1"
     )
+    echo !new_files!
+    endlocal
 )
 
-echo "Uspešno kreiranih novih datotek."
+echo.
+echo Uspešno kreiranih %new_files:~-1% novih datotek.

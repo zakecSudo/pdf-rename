@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # TULE PREIMENUJ V ŽELJENI EXCEL VIR
-source_excel_file = "demo.xlsx"
+source_excel_file="demo.xlsx"
 # TULE PREIMENUJ V ŽELJENI EXCEL VIR
 
-echo "KOPIRAJ in PREIMENUJ .xlsx datoteko iz .pdf"
+echo "----------------------------------------------------------------"
+echo "KOPIRAJ in PREIMENUJ $source_excel_file datoteko iz .pdf datotek"
+echo "----------------------------------------------------------------"
 read -p "Ali naj se skripta požene v trenutnem direktoriju? (y/n): " choice
 
 if [ "$choice" = "n" ] || [ "$choice" = "N" ]; then
@@ -12,20 +14,17 @@ if [ "$choice" = "n" ] || [ "$choice" = "N" ]; then
     cd "$folder"
 fi
 
-# Najdi vse pdf file
-pdf_files=$(find . -type f -name "*.pdf")
-
-
 # Kopiraj demo.xlsx za vsak .pdf file
-new_files=0
-for pdf_file in $pdf_files; do
+new_files=$(find . -type f -name "*.pdf" | while IFS= read -r pdf_file; do
     excel_file="$(basename "$pdf_file" .pdf).xlsx"
 
     # Preveri če tak file ne obstaja
     if ! [[ -f "$excel_file" ]]; then
-        cp source_excel_file excel_file
+        cp "$source_excel_file" "$excel_file"
         ((new_files=new_files+1))
     fi
-done
+    echo $new_files
+done)
 
-echo "Uspešno kreiranih $new_files novih datotek."
+echo ""
+echo "Uspešno kreiranih ${new_files: -1} novih datotek."
