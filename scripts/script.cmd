@@ -11,11 +11,7 @@ set /p "choice=Ali naj se skripta pozene v trenutnem direktoriju? (y/n): "
 
 if /i "%choice%"=="n" (
     set /p "folder=Vnesi pot kjer naj se skripta pozene: "
-    echo $folder
     cd "%folder%"
-    echo TEST
-    echo $PWD
-    echo TEST
 )
 
 :: Kopiraj demo.xlsx za vsak .pdf file
